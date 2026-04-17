@@ -1,0 +1,263 @@
+:root {
+    /* Brand Colors (Parmalat) */
+    --primary-blue: #004C97;
+    --secondary-blue: #00A3E0;
+    --light-blue: #E6F3FA;
+    
+    /* Layout Colors */
+    --bg-color: #F4F7F6;
+    --surface-color: #FFFFFF;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --border-color: #E2E8F0;
+    
+    /* Status Colors */
+    --status-inactivo: #94A3B8; 
+    --status-proceso: #38BDF8; 
+    --status-respondio: #FBBF24; 
+    --status-reactivado: #22C55E; 
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+.hidden { display: none !important; }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 16px; }
+.mb-4 { margin-bottom: 24px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+.ml-2 { margin-left: 8px; }
+.font-weight-600 { font-weight: 600; }
+
+/* ========================================== */
+/* SPA View System                            */
+/* ========================================== */
+.view-container {
+    display: none;
+    min-height: 100vh;
+    animation: fadeIn 0.3s ease;
+}
+.view-container.active { display: flex; flex-direction: column; }
+
+/* Centered Layout for Customer Views */
+#view-customer-login.active, 
+#view-customer-form.active, 
+#view-customer-success.active,
+#view-admin-login.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--bg-color) 0%, #e0e8f0 100%);
+}
+
+#view-admin-dashboard.active { display: block; } /* Admin is full screen block */
+
+
+/* ========================================== */
+/* CUSTOMER & LOGIN CARDS                     */
+/* ========================================== */
+.customer-card {
+    background: var(--surface-color);
+    width: 100%;
+    max-width: 480px;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    position: relative;
+}
+
+.brand-logo {
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 24px;
+    display: block;
+}
+
+.customer-card h2 { color: var(--primary-blue); font-size: 1.6rem; margin-bottom: 8px; }
+.customer-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
+
+/* Form Elements */
+.form-group { display: flex; flex-direction: column; text-align: left; }
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.2s;
+    outline: none;
+}
+.form-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0,76,151,0.1); }
+.form-lg { padding: 14px 16px; font-size: 1.05rem; }
+
+/* Radio Cards (Survey options) */
+.radio-group { display: flex; gap: 10px; }
+.radio-group.row { flex-direction: row; }
+.radio-group.col { flex-direction: column; gap: 8px; }
+
+.radio-card {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+}
+.radio-card input { position: absolute; opacity: 0; }
+.radio-card span {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: white;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.2s;
+}
+.radio-group.col .radio-card span { text-align: left; padding: 14px 20px; }
+.radio-card input:checked + span {
+    border-color: var(--primary-blue);
+    background: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+    padding: 10px 20px; border: none; border-radius: var(--radius-md);
+    font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-lg { padding: 14px 24px; font-size: 1.1rem; border-radius: 12px; }
+.btn-block { width: 100%; }
+.btn-primary { background: var(--primary-blue); color: white; }
+.btn-primary:hover { background: var(--secondary-blue); transform: translateY(-1px); }
+.btn-outline { background: transparent; border: 1px solid var(--primary-blue); color: var(--primary-blue); }
+.btn-text { background: transparent; border: none; color: var(--text-muted); font-size: 0.85rem; }
+.btn-text:hover { color: var(--primary-blue); text-decoration: underline; }
+
+.error-msg { color: #dc2626; font-size: 0.85rem; margin-top: 12px; font-weight: 500; }
+.footer-links { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+.footer-links a { color: var(--text-muted); font-size: 0.85rem; text-decoration: none; }
+.footer-links a:hover { color: var(--primary-blue); text-decoration: underline; }
+
+/* Success Box */
+.incentive-box {
+    background: var(--light-blue);
+    border: 1px dashed var(--primary-blue);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex; align-items: center; gap: 16px; text-align: left;
+}
+.incentive-box i { font-size: 2rem; color: var(--primary-blue); }
+.incentive-box h4 { color: var(--primary-blue); font-size: 1rem; margin-bottom: 4px; }
+.incentive-box p { margin: 0; font-size: 0.85rem; color: var(--text-main); }
+
+
+/* ==========================================
+/* ADMIN DASHBOARD (CRM RE-STYLED COMPACT)    */
+/* ========================================== */
+.admin-layout .app-header {
+    background: var(--surface-color); padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 100;
+}
+.admin-layout .header-left { display: flex; align-items: center; gap: 16px; }
+.admin-layout .logo { height: 32px; }
+.admin-layout .header-titles h1 { font-size: 1.1rem; margin-bottom: 2px; color: var(--primary-blue); }
+.admin-layout .header-titles p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+.admin-layout .dashboard-container { padding: 16px 24px; max-width: 1400px; margin: 0 auto; }
+
+/* KPIs Compacted */
+.kpi-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.kpi-card { background: var(--surface-color); border-radius: var(--radius-md); padding: 12px 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
+.kpi-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.kpi-icon.total { background: var(--light-blue); color: var(--primary-blue); }
+.kpi-icon.contacted { background: #e0f2fe; color: #0284c7; }
+.kpi-icon.responded { background: #fef3c7; color: #d97706; }
+.kpi-icon.reactivated { background: #dcfce7; color: var(--status-reactivado); }
+.kpi-icon.rate { background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); color: white; }
+.kpi-info h3 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
+.kpi-info p { font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin: 0; }
+.kpi-card.highlight .kpi-info p { color: var(--primary-blue); }
+
+/* Layouts */
+.middle-section { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+@media (min-width: 1024px) { .middle-section { grid-template-columns: 1fr 2fr; } }
+.charts-section { display: flex; flex-direction: column; gap: 16px; }
+
+/* Chart Bug Fix: Fixed height and position relative stops the resize loop */
+.chart-container { background: var(--surface-color); padding: 16px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); position: relative; height: 260px; }
+.chart-container h4 { margin-bottom: 12px; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;}
+.chart-container canvas { height: calc(100% - 30px) !important; width: 100% !important; }
+
+/* Filters Compacted */
+.filters-section { background: var(--surface-color); padding: 16px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+.filters-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.filters-header h4 { font-size: 0.95rem; }
+.filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.filter-group { display: flex; flex-direction: column; gap: 4px; }
+.filter-group label { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+.filter-group select, .filter-group input { padding: 6px 10px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 0.85rem; outline: none; }
+.filter-group.global-search { grid-column: 1 / -1; position: relative; flex-direction: row; align-items: center; }
+.filter-group.global-search i { position: absolute; left: 14px; color: var(--text-muted); }
+.filter-group.global-search input { width: 100%; padding-left: 32px; }
+
+/* Admin Table Compacted */
+.table-section { background: var(--surface-color); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 16px; overflow: hidden; }
+.table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.table-header h4 { font-size: 0.95rem; }
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th { padding: 8px 12px; background-color: var(--light-blue); color: var(--primary-blue); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+th.sortable { cursor: pointer; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; vertical-align: middle; }
+
+/* Status Badges */
+.status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+tr[data-estado="Inactivo"] .status-badge { background-color: #f1f5f9; color: var(--status-inactivo); }
+tr[data-estado="En Proceso"] .status-badge { background-color: #e0f2fe; color: var(--primary-blue); }
+tr[data-estado="Respondió"] .status-badge { background-color: #fef3c7; color: #b45309; }
+tr[data-estado="Reactivado"] .status-badge { background-color: #dcfce7; color: #166534; }
+
+.badge-intent { font-size: 0.85rem; padding: 3px 8px; border-radius: 4px; border: 1px solid #ddd; }
+.badge-intent.si { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+.badge-intent.no { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.badge-intent.talvez { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-weight: 600; color: var(--text-main); }
+.user-email { font-size: 0.8rem; color: var(--text-muted); }
+
+/* Quick Actions in Admin Table */
+.btn-action { padding: 6px 10px; font-size: 0.85rem; border-radius: 4px; background: transparent; border: 1px solid var(--status-reactivado); color: var(--status-reactivado); cursor: pointer;}
+.btn-action:hover { background: var(--status-reactivado); color: white;}
+.btn-action.disabled { border-color: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
+
+/* Alerts Alerts System */
+.alert-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+.alert { padding: 12px 20px; background: white; border-radius: 8px; box-shadow: var(--shadow-lg); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 500; animation: slideInLeft 0.3s ease; }
+@keyframes slideInLeft { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Responsive Grid/Customer Card Mobile */
+@media (max-width: 480px) {
+    .customer-card { padding: 30px 20px; border-radius: 0; box-shadow: none; background: transparent; }
+    #view-customer-login.active, #view-customer-form.active, #view-customer-success.active { background: white; padding: 0; } 
+    .radio-group.row { flex-direction: column; gap: 8px;}
+}

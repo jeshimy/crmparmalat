@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parmalat - Reactivación & CRM</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- GLOBAL ALERTS -->
+    <div id="alertContainer" class="alert-container"></div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: CUSTOMER LOGIN -->
+    <!-- ========================================== -->
+    <div id="view-customer-login" class="view-container active">
+        <div class="customer-card login-card">
+            <img src="Logo_Parmalat.png" alt="Logo Parmalat" class="brand-logo mx-auto">
+            <h2>¡Hola! Nos alegra verte</h2>
+            <p>Ingresa tus datos para continuar e identificarte en nuestro sistema.</p>
+            
+            <div class="form-group">
+                <input type="text" id="customerLoginInput" class="form-control form-lg" placeholder="Tu Teléfono o Email...">
+            </div>
+            
+            <button id="btnCustomerLogin" class="btn btn-primary btn-block btn-lg mt-3">Ingresar</button>
+            <p id="customerLoginError" class="error-msg hidden">No encontramos tus datos, por favor verifica.</p>
+            
+            <div class="footer-links">
+                <a href="#" id="linkAdminLogin">Acceso Interno (Personal)</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: CUSTOMER FORM (SURVEY) -->
+    <!-- ========================================== -->
+    <div id="view-customer-form" class="view-container">
+        <div class="customer-card survey-card">
+            <img src="Logo_Parmalat.png" alt="Logo Parmalat" class="brand-logo mx-auto mb-2" style="height: 30px;">
+            <div class="survey-header">
+                <h2>Queremos volver a ti 💙</h2>
+                <p>Cuéntanos para mejorar tu experiencia con Parmalat.</p>
+            </div>
+            
+            <div class="form-body text-left">
+                <!-- Question 1 -->
+                <div class="form-group mb-4">
+                    <label class="font-weight-600 mb-2">¿Por qué dejaste de comprar?</label>
+                    <select id="surveyReason" class="form-control form-lg mb-2">
+                        <option value="" disabled selected>Selecciona un motivo...</option>
+                        <option value="Precio">Precio</option>
+                        <option value="Prefiero otra marca">Prefiero otra marca</option>
+                        <option value="Otro">Otro motivo</option>
+                    </select>
+                    <!-- Open field conditionally shown in JS -->
+                    <input type="text" id="surveyReasonOther" class="form-control hidden" placeholder="Escribe tu motivo aquí...">
+                </div>
+                
+                <!-- Question 2 -->
+                <div class="form-group mb-4">
+                    <label class="font-weight-600 mb-2">¿Te gustaría volver a comprar Parmalat?</label>
+                    <div class="radio-group row">
+                        <label class="radio-card"><input type="radio" name="surveyIntent" value="Sí"><span>Sí</span></label>
+                        <label class="radio-card"><input type="radio" name="surveyIntent" value="No"><span>No</span></label>
+                        <label class="radio-card"><input type="radio" name="surveyIntent" value="Tal vez"><span>Tal vez</span></label>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="form-group mb-4">
+                    <label class="font-weight-600 mb-2">¿Qué producto te interesa más?</label>
+                    <div class="radio-group col">
+                        <label class="radio-card"><input type="radio" name="surveyProduct" value="Leche"><span>Leche</span></label>
+                        <label class="radio-card"><input type="radio" name="surveyProduct" value="Yogur"><span>Yogur</span></label>
+                        <label class="radio-card"><input type="radio" name="surveyProduct" value="Queso"><span>Queso</span></label>
+                        <label class="radio-card"><input type="radio" name="surveyProduct" value="Otros"><span>Otros</span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="btnSubmitSurvey" class="btn btn-primary btn-block btn-lg">Enviar mis respuestas</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: CUSTOMER SUCCESS -->
+    <!-- ========================================== -->
+    <div id="view-customer-success" class="view-container">
+        <div class="customer-card success-card">
+            <div class="success-icon mb-3">
+                <i class="fa-solid fa-check-circle" style="color:var(--status-reactivado); font-size:4rem;"></i>
+            </div>
+            <h2>¡Gracias por tus respuestas!</h2>
+            <p>Tu opinión es vital para que Parmalat siga ofreciéndote lo mejor todos los días.</p>
+            
+            <div class="incentive-box mt-4">
+                <i class="fa-solid fa-gift"></i>
+                <div>
+                    <h4>¡Tenemos una sorpresa para ti!</h4>
+                    <p>Pronto recibirás un beneficio especial en tu celular o correo electrónico.</p>
+                </div>
+            </div>
+
+            <button id="btnBackToHome" class="btn btn-outline btn-block mt-4">Volver al inicio</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 4: ADMIN LOGIN -->
+    <!-- ========================================== -->
+    <div id="view-admin-login" class="view-container">
+        <div class="customer-card login-card" style="max-width: 400px;">
+            <i class="fa-solid fa-lock mb-3" style="font-size:2rem; color:var(--text-muted)"></i>
+            <h2>Acceso a CRM</h2>
+            <p>Módulo exclusivo para uso interno.</p>
+            
+            <div class="form-group mt-3">
+                <input type="password" id="adminLoginInput" class="form-control form-lg" placeholder="Contraseña de acceso...">
+            </div>
+            
+            <button id="btnAdminLogin" class="btn btn-primary btn-block btn-lg mt-3">Iniciar Sesión</button>
+            <p id="adminLoginError" class="error-msg hidden">Contraseña incorrecta.</p>
+            
+            <div class="footer-links">
+                <a href="#" id="linkCustomerPortal">Volver al Portal de Clientes</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- VIEW 5: ADMIN DASHBOARD (CRM CRM) -->
+    <!-- ========================================== -->
+    <div id="view-admin-dashboard" class="view-container admin-layout">
+        <header class="app-header">
+            <div class="header-left">
+                <img src="Logo_Parmalat.png" alt="Logo Parmalat" class="logo" onerror="this.src='https://via.placeholder.com/150x50?text=Parmalat'">
+                <div class="header-titles">
+                    <h1>CRM de Reactivación de Clientes</h1>
+                    <p>Gestión de clientes inactivos y Portal Front-End</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="actions-panel">
+                    <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+                    <button class="btn btn-outline" id="btnLoadCsv" title="Poblar Base Inicial">
+                        <i class="fa-solid fa-upload"></i> Poblar CRM (CSV)
+                    </button>
+                    <button class="btn btn-primary" id="btnExportCsv">
+                        <i class="fa-solid fa-download"></i> Exportar Datos
+                    </button>
+                    <button class="btn btn-outline ml-2" id="btnExitAdmin" title="Volver al Portal">
+                        <i class="fa-solid fa-sign-out"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-container">
+            <!-- KPI METRICS DASHBOARD -->
+            <section class="kpi-dashboard">
+                <div class="kpi-card">
+                    <div class="kpi-icon total"><i class="fa-solid fa-users"></i></div>
+                    <div class="kpi-info">
+                        <h3>Total Clientes</h3>
+                        <p id="kpiTotal">0</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon contacted"><i class="fa-solid fa-door-open"></i></div>
+                    <div class="kpi-info">
+                        <h3>Ingresaron al Portal</h3>
+                        <p id="kpiEntered">0</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon responded"><i class="fa-solid fa-comments"></i></div>
+                    <div class="kpi-info">
+                        <h3>Respondieron Form</h3>
+                        <p id="kpiResponded">0</p>
+                    </div>
+                </div>
+                <div class="kpi-card highlight">
+                    <div class="kpi-icon rate"><i class="fa-solid fa-heart"></i></div>
+                    <div class="kpi-info">
+                        <h3>Intención Positiva (Sí/Tal vez)</h3>
+                        <p id="kpiIntentRate">0%</p>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon reactivated"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div class="kpi-info">
+                        <h3>Compras / Reactivados</h3>
+                        <p id="kpiReactivated">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAIN CONTENT: CHARTS AND FILTERS -->
+            <div class="middle-section">
+                <!-- CHARTS -->
+                <section class="charts-section">
+                    <div class="chart-container">
+                        <h4>Intención de Recompra</h4>
+                        <canvas id="intentChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h4>Motivos de Abandono (Actuales)</h4>
+                        <canvas id="reasonsChart"></canvas>
+                    </div>
+                </section>
+
+                <!-- FILTERS -->
+                <section class="filters-section">
+                    <div class="filters-header">
+                        <h4><i class="fa-solid fa-filter"></i> Filtros y Búsqueda</h4>
+                        <button class="btn btn-text" id="btnClearFilters">Limpiar filtros</button>
+                    </div>
+                    <div class="filters-grid">
+                        <div class="filter-group global-search">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="filterSearch" placeholder="Buscar por Nombre, Teléfono o Email...">
+                        </div>
+                        <div class="filter-group">
+                            <label>Intención de Recompra</label>
+                            <select id="filterIntent">
+                                <option value="">Todas</option>
+                                <option value="Sí">Sí</option>
+                                <option value="No">No</option>
+                                <option value="Tal vez">Tal vez</option>
+                                <option value="Sin Respuesta">Sin Respuesta</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Estado</label>
+                            <select id="filterEstado">
+                                <option value="">Todos</option>
+                                <option value="Inactivo">Inactivo</option>
+                                <option value="En Proceso">En proceso (Ingresó portal)</option>
+                                <option value="Respondió">Respondió</option>
+                                <option value="Reactivado">Reactivado (Compró)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Motivo Abandono</label>
+                            <select id="filterMotivo">
+                                <option value="">Todos</option>
+                                <!-- Inyectado dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- DATA TABLE -->
+            <section class="table-section">
+                <div class="table-header">
+                    <h4>Detalle de Clientes (Validación de Ingresos)</h4>
+                    <span id="tableResultsCount">Mostrando 0 resultados</span>
+                </div>
+                <div class="table-wrapper">
+                    <table id="crmTable">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Contacto</th>
+                                <th>Motivo Abandono</th>
+                                <th>Intención</th>
+                                <th>Producto Interés</th>
+                                <th class="sortable" data-sort="Estado">Estado Panel <i class="fa-solid fa-sort"></i></th>
+                                <th>Acceso Info</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be injected here via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="empty-state hidden">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <p>No se encontraron clientes con los parámetros actuales.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- App Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
