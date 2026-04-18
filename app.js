@@ -1,18 +1,7 @@
 // ==========================================
-// FIREBASE CLOUD CONFIGURATION
+// LOCAL STORAGE CONFIGURATION
 // ==========================================
-const firebaseConfig = {
-  apiKey: "AIzaSyC7z9nNbBGV_tgBziv-L8va3WqcrRk_IIY",
-  authDomain: "crm-parmalat.firebaseapp.com",
-  projectId: "crm-parmalat",
-  storageBucket: "crm-parmalat.firebasestorage.app",
-  messagingSenderId: "877332814287",
-  appId: "1:877332814287:web:d51dd453757e00799adaba"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const DB_KEY = 'crm_clientes_local';
 
 // ==========================================
 // STATE MANAGEMENT & DATA
@@ -289,25 +278,22 @@ const fallbackCSV = `"Nombre","Telefono","Email","Ultima_Compra","Frecuencia","P
 "Carlos 99","3472910292","user99@mail.com","2025-10-11","Baja","Yogur","Inactivo","Precio","No","No","No","",""`;
 
 async function loadData() {
-    db.collection('clientes').onSnapshot((snapshot) => {
-        if (snapshot.empty) {
-            console.warn("Firestore vacío, procesando CSV de emergencia para sembrar...");
-            parseCSVText(fallbackCSV, true);
-        } else {
-            clientes = [];
-            snapshot.forEach(doc => {
-                clientes.push({ id: doc.id, ...doc.data() });
-            });
-            
+    try {
+        const stored = localStorage.getItem(DB_KEY);
+        if (stored) {
+            clientes = JSON.parse(stored);
             if (currentUser) {
                 currentUser = clientes.find(c => c.id === currentUser.id) || null;
             }
             processDataLoaded();
+        } else {
+            console.warn("Base local vacía, sembrando con CSV por defecto...");
+            parseCSVText(fallbackCSV, true);
         }
-    }, (error) => {
-        console.error("Error sincronizando Firebase: ", error);
-        showAlert("Error de conexión con la Nube.", "error");
-    });
+    } catch (error) {
+        console.error("Error accediendo a datos locales: ", error);
+        showAlert("Error leyendo de localStorage.", "error");
+    }
 }
 
 function handleFileUpload(e) {
@@ -322,7 +308,7 @@ function handleFileUpload(e) {
     reader.readAsText(file);
 }
 
-function parseCSVText(text, uploadToFirestore = false) {
+function parseCSVText(text, saveLocal = false) {
     const lines = text.trim().split('\n');
     if (lines.length < 2) return;
     
@@ -349,22 +335,17 @@ function parseCSVText(text, uploadToFirestore = false) {
         newClientes.push(clientObj);
     }
     
-    if (uploadToFirestore) {
-        let batch = db.batch();
-        newClientes.forEach(c => {
-            const docRef = db.collection('clientes').doc(c.id);
-            batch.set(docRef, c);
-        });
-        batch.commit().then(() => {
-            showAlert('Base actualizada e inyectada a Firebase exitosamente.', 'success');
-        }).catch(err => {
-            console.error("Error de subida:", err);
-            showAlert('Error subiendo base a la Nube.', 'error');
-        });
-    } else {
-        clientes = newClientes;
-        processDataLoaded();
+    clientes = newClientes;
+    if (saveLocal) {
+        try {
+            localStorage.setItem(DB_KEY, JSON.stringify(clientes));
+            showAlert('Base actualizada exitosamente.', 'success');
+        } catch (err) {
+            console.error("Error guardando localmente:", err);
+            showAlert('Error guardando en localStorage.', 'error');
+        }
     }
+    processDataLoaded();
 }
 
 function processDataLoaded() {
@@ -394,21 +375,21 @@ function handleCustomerLogin() {
         DOM.customerLoginError.classList.add('hidden');
         currentUser = found;
         
-        // Mutate state in the Cloud
+        // Mutate state locally
         const nuevoEstado = found.Estado === 'Inactivo' ? 'En Proceso' : found.Estado;
-        db.collection('clientes').doc(found.id).update({
-            Ingreso_Portal: true,
-            Estado: nuevoEstado
-        }).then(() => {
+        found.Ingreso_Portal = true;
+        found.Estado = nuevoEstado;
+        try {
+            localStorage.setItem(DB_KEY, JSON.stringify(clientes));
             // Clean form and advance
             document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
             DOM.surveyReason.value = '';
             DOM.surveyReasonOther.value = '';
             DOM.surveyReasonOther.classList.add('hidden');
             showView('customerForm');
-        }).catch(e => {
-            showAlert("Error verificando conectividad.", "error");
-        });
+        } catch (e) {
+            showAlert("Error guardando datos localmente.", "error");
+        }
     } else {
         DOM.customerLoginError.innerText = "No encontramos tus datos, por favor verifica.";
         DOM.customerLoginError.classList.remove('hidden');
@@ -435,18 +416,18 @@ function handleSurveySubmit() {
         return;
     }
 
-    // Save Responses via Firebase
-    db.collection('clientes').doc(currentUser.id).update({
-        Motivo_Abandono: reason,
-        Intencion_Recompra: intent,
-        Producto_Interes: product,
-        Respondio: 'Sí',
-        Estado: 'Respondió'
-    }).then(() => {
+    // Save Responses Locally
+    currentUser.Motivo_Abandono = reason;
+    currentUser.Intencion_Recompra = intent;
+    currentUser.Producto_Interes = product;
+    currentUser.Respondio = 'Sí';
+    currentUser.Estado = 'Respondió';
+    try {
+        localStorage.setItem(DB_KEY, JSON.stringify(clientes));
         showView('customerSuccess');
-    }).catch(e => {
-        showAlert("Error enviando las respuestas. Revisa tu conexión.", "error");
-    });
+    } catch (e) {
+        showAlert("Error guardando respuestas.", "error");
+    }
 }
 
 // ==========================================
@@ -595,13 +576,19 @@ function renderAdminTable() {
 
 // Global scope action for admin table
 window.forceReactivate = function(id) {
-    db.collection('clientes').doc(id.toString()).update({
-        Estado: 'Reactivado'
-    }).then(() => {
-        showAlert(`Cliente marcado como reactivado.`, 'success');
-    }).catch(() => {
-        showAlert('No se pudo reactivar el cliente en la nube', 'error');
-    });
+    const client = clientes.find(c => c.id === id.toString());
+    if (client) {
+        client.Estado = 'Reactivado';
+        try {
+            localStorage.setItem(DB_KEY, JSON.stringify(clientes));
+            showAlert(`Cliente marcado como reactivado.`, 'success');
+            applyFilters();
+        } catch (e) {
+            showAlert('No se pudo guardar la reactivación.', 'error');
+        }
+    } else {
+        showAlert('No se encontró al cliente.', 'error');
+    }
 }
 
 function renderAdminCharts() {
