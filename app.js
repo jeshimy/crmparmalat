@@ -18,6 +18,7 @@ let reasonsChartInst = null;
 const DOM = {
     // Views
     views: {
+        marketingLanding: document.getElementById('view-marketing-landing'),
         customerLogin: document.getElementById('view-customer-login'),
         customerForm: document.getElementById('view-customer-form'),
         customerSuccess: document.getElementById('view-customer-success'),
@@ -25,6 +26,10 @@ const DOM = {
         adminDashboard: document.getElementById('view-admin-dashboard')
     },
     
+    // Landing
+    btnGoToLogin: document.getElementById('btnGoToLogin'),
+    linkAdminLoginFromLanding: document.getElementById('linkAdminLoginFromLanding'),
+
     // Customer Portal
     customerLoginInput: document.getElementById('customerLoginInput'),
     btnCustomerLogin: document.getElementById('btnCustomerLogin'),
@@ -83,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initEvents();
     loadData();
     // Default starting view
-    showView('customerLogin');
+    showView('marketingLanding');
 });
 
 // View Navigation System
@@ -111,9 +116,11 @@ function showAlert(message, type = 'info') {
 // ==========================================
 function initEvents() {
     // Nav links
+    DOM.btnGoToLogin.addEventListener('click', () => showView('customerLogin'));
+    DOM.linkAdminLoginFromLanding.addEventListener('click', (e) => { e.preventDefault(); showView('adminLogin'); });
     DOM.linkAdminLogin.addEventListener('click', (e) => { e.preventDefault(); showView('adminLogin'); });
-    DOM.linkCustomerPortal.addEventListener('click', (e) => { e.preventDefault(); showView('customerLogin'); });
-    DOM.btnExitAdmin.addEventListener('click', () => { showView('customerLogin'); });
+    DOM.linkCustomerPortal.addEventListener('click', (e) => { e.preventDefault(); showView('marketingLanding'); });
+    DOM.btnExitAdmin.addEventListener('click', () => { showView('marketingLanding'); });
     
     // Customer Portal Events
     DOM.btnCustomerLogin.addEventListener('click', handleCustomerLogin);
